@@ -126,15 +126,16 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>false</SDLCheck>
-      <AdditionalIncludeDirectories>$(HALCONROOT)\include;$(HALCONROOT)\include\halconcpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\工作\创科应用\CKVision SDK 5.3.0.1\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ModuleDefinitionFile>GetLocalPicture.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>halcon.lib;halconcpp.lib;</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(HALCONROOT)\lib\x64-win64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>CKBase.lib;CKGDI.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\工作\创科应用\CKVision SDK 5.3.0.1\Lib</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
