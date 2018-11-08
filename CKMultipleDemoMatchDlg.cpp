@@ -285,27 +285,57 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 
 	EndTime();
 	SMatchData* data;
+	int index = 0;
 	for (int i = 0; i < m_Match.GetNumMatchs(); i++)
 	{
+		
 		data = m_Match.GetMatchData(i);
+		m_page3.UpdateData();
+		if (m_page3.m_CheckNum.GetCheck() == 1 )		//数量超出上限，返回
+			if (i > (m_page3.m_iNumUp - 1))
+			{
+				return;
+			}
+			
+		if (m_page3.m_CheckX.GetCheck() == 1)	//位置X 超出上下限
+			if (data->center.x< m_page3.m_iXDown || data->center.x > m_page3.m_iXUp)
+			{
+				index++;
+				continue;
+			}		
+		if(m_page3.m_CheckY.GetCheck() == 1)	//位置Y 超出上下限
+			if (data->center.y< m_page3.m_iYDown || data->center.y > m_page3.m_iYUp)
+			{
+				index++;
+				continue;
+			}
+		if (m_page3.m_CheckAngle.GetCheck() == 1)   //角度超出上下限
+			if (data->angle< m_page3.m_iAngleDown || data->angle>m_page3.m_iAngleUp)
+			{
+				index++;
+				continue;
+			}
+		if(m_page3.m_CheckScale.GetCheck() ==1)
+			if (data->scale<m_page3.m_dScaleDown || data->scale>m_page3.m_dScaleUp)
+			{
+				index++;
+				continue;
+			}
 
-		text.Format(_T("%d"), i+1);
-		m_page3.m_ListCtrl.InsertItem(i, text);
+		strResult[0].Format(_T("%d"), i + 1);
+		strResult[1].Format(_T("%0.3f"), data->score);
+		strResult[2].Format(_T("%0.3f"), data->center.x);
+		strResult[3].Format(_T("%0.3f"), data->center.y);
+		strResult[4].Format(_T("%0.3f"), data->angle);
+		strResult[5].Format(_T("%0.3f"), data->scale);
 
-		text.Format(_T("%0.3f"), data->score);
-		m_page3.m_ListCtrl.SetItemText(i, 1, text);
-
-		text.Format(_T("%0.3f"), data->center.x);
-		m_page3.m_ListCtrl.SetItemText(i, 2, text);
-
-		text.Format(_T("%0.3f"), data->center.y);
-		m_page3.m_ListCtrl.SetItemText(i, 3, text);
-
-		text.Format(_T("%0.3f"), data->angle);
-		m_page3.m_ListCtrl.SetItemText(i, 4, text);
-
-		text.Format(_T("%0.3f"), data->scale);
-		m_page3.m_ListCtrl.SetItemText(i, 5, text);
+	
+		m_page3.m_ListCtrl.InsertItem(i-index, strResult[0]);
+		m_page3.m_ListCtrl.SetItemText(i - index, 1, strResult[1]);
+		m_page3.m_ListCtrl.SetItemText(i - index, 2, strResult[2]);
+		m_page3.m_ListCtrl.SetItemText(i - index, 3, strResult[3]);
+		m_page3.m_ListCtrl.SetItemText(i - index, 4, strResult[4]);
+		m_page3.m_ListCtrl.SetItemText(i - index, 5, strResult[5]);
 
 		CGdiRotBox* p1 = new CGdiRotBox(
 			data->center.x,
@@ -329,10 +359,11 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 			m_Results.AddItem(p2);
 		}
 	}
+	//水平排序和垂直排序 后面添加代码 
+	//
+	//
 
-	//水平排序和垂直排序
-
-
+	
 
 	m_GdiView.Redraw();
 }

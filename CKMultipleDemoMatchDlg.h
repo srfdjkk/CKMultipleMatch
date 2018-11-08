@@ -64,6 +64,7 @@ public:
 	COverlay m_Overlay;
 	COverlay m_Results;
 
+	CString	 strResult[6];
 
 
 	//Ñ§Ï°Ä£°åÇøÓò
