@@ -8,11 +8,26 @@
 #include "CPAGE3.h"
 #include "CPAGE4.h"
 #include "CLearnDlg.h"
-struct StatePara
-{
-	int svae_ReadType;
 
-};
+
+typedef struct  strSearchModePara
+{
+	int iMaxCount;
+	int iMinScore;
+	int iMinAngle;
+	int iMaxAngle;
+	int iMinScale;
+	int iMaxScale;
+	int iMaxOverlap;
+	int iSpeed;
+	int iAccuracy;
+	int iPolarity;
+	bool bRoi;
+	CPrImage*m_Image;
+	CShapeModelList*m_Models;
+	CGdiRect*m_sRectROI;
+}SearchModePara;
+
 
 using namespace std;
 
@@ -51,6 +66,8 @@ public:
 	afx_msg void OnBnClickedCancelButton();
 	afx_msg void OnBnClickedOKButton();
 
+
+
 	CShapeModelList	m_Models;   
 
 	CTabCtrl m_Tab;
@@ -76,6 +93,7 @@ public:
 	CShapeMatch		m_Match;
 	GetMatchParam m_GetMatchParam;
 	int m_nSel;
+	SearchModePara ModePara;
 
 	LARGE_INTEGER m_Frequency;
 	LARGE_INTEGER m_BeginTime;

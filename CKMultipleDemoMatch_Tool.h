@@ -3,15 +3,15 @@
 #include "CKMultipleDemoMatchDlg.h"
 
 
-//参数信息结构体
-typedef struct stt_Param {
+//创建链接节点结构体
+typedef struct LinkParam {
 	TCHAR	szDocName[MAX_PATH];
 	int		nNodeID;
 	TCHAR	szNodeName[MAX_PATH];
 	TCHAR	szParaName[MAX_PATH];//变量名字（数组）
 	int		nType;				//变量类型（数组内部的数值类型）
 	int		nIndex;				//数组的角标编号
-}STTP,*PSTTP;
+}stLinkParam,*pSTLinkParam;
 
 
 
@@ -25,28 +25,19 @@ public:
 	void Load(CArchive &ar);
 	void ShowPropertyDialog();
 	void Do();
-	void DoCreate();
+	void SaveData();
 	void ReadpCharA(CArchive &ar, TCHAR* pchar);
 	void ReadDouble(CArchive &ar, double& dbVal);
 	void WritepCharA(CArchive &ar, TCHAR* pchar);
 	void WriteDouble(CArchive &ar, double dbVal);
-	
 	void SetImageParamByCkImage(ImageParam* pImageParam, CPrImage* pho_Img);
-	void Hobject2PImage(ImageParam* pHImage, ImageParam* pCImage);
 
-	BYTE *m_pBuffer;
 	CPrImage	m_Image;
-	CString m_strImgFolderPathT;
-	std::vector<CString> m_VectImgFileNameT;
-
-	STTP m_Toolparam;
-
-	PImageParam m_pCImage;
+	stLinkParam m_stLinkParam;
 	GetMatchParam m_GetMatchParam;
+	CShapeMatch	*m_Match;
+	CKMultipleDemoMatchDlg dlg;
+	CString	 strResult[6];
 
-	PImageParam m_imagepinT;
-	//CKVision::CPrImage m_ckImage;
-	int m_NOdomodel;
-	int m_ImageSelect;
 };
 

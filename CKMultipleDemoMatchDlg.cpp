@@ -192,9 +192,24 @@ void CKMultipleDemoMatchDlg::OnBnClickedCancelButton()
 }
 
 
+
+
 void CKMultipleDemoMatchDlg::OnBnClickedOKButton()
 {
 	//HIDBSelectLink(cDocName, &iNodeID, cNodeName, cParamName, &iType, &iIndex);
+	//保存参数，便于流程中运行
+	UpdateData();
+	ModePara.iMaxCount = m_page2.m_MaxCount;
+	ModePara.iMinScore = m_page2.m_iMinScore;
+	ModePara.iMinAngle = m_page2.m_iMinAngle;
+	ModePara.iMaxAngle = m_page2.m_iMaxAngle;
+	ModePara.iMinScale = m_page2.m_iMinScale;
+	ModePara.iMaxScale = m_page2.m_iMaxScale;
+	ModePara.iMaxOverlap =  m_page2.m_iMaxOverlap;
+	ModePara.iSpeed = m_page2.m_iSpeed;
+	ModePara.iAccuracy = m_page2.m_iAccuracy;
+	ModePara.iPolarity = m_page2.m_iPolarity;
+	
 	CDialogEx::OnOK();
 }
 
@@ -252,8 +267,6 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 	// TODO: 在此添加控件通知处理程序代码
 	UpdateData(TRUE);
 	m_page3.m_ListCtrl.DeleteAllItems();
-	//m_nSel = -1;
-
 	m_Match.SetMaxCount(m_page2.m_MaxCount);
 	m_Match.SetMinScore(m_page2.m_iMinScore);
 	m_Match.SetMinAngle(m_page2.m_iMinAngle);
@@ -264,11 +277,9 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 	m_Match.SetMaxSpeed(m_page2.m_iSpeed);
 	m_Match.SetAccuracy(m_page2.m_iAccuracy);
 	m_Match.SetPolarity(m_page2.m_iPolarity);
-
+	
 	CString text;
 	CModelContour templ;
-
-	//m_List1.DeleteAllItems();
 
 	Overlay_DeleteAll(m_Results);
 
@@ -283,7 +294,7 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 		m_Match.Execute(m_Image, m_Models, MaxROI);
 	}
 
-	EndTime();
+	//EndTime();
 	SMatchData* data;
 	int index = 0;
 	for (int i = 0; i < m_Match.GetNumMatchs(); i++)
@@ -329,13 +340,13 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 		strResult[4].Format(_T("%0.3f"), data->angle);
 		strResult[5].Format(_T("%0.3f"), data->scale);
 
-	
-		m_page3.m_ListCtrl.InsertItem(i-index, strResult[0]);
+		m_page3.m_ListCtrl.InsertItem(i - index, strResult[0]);
 		m_page3.m_ListCtrl.SetItemText(i - index, 1, strResult[1]);
 		m_page3.m_ListCtrl.SetItemText(i - index, 2, strResult[2]);
 		m_page3.m_ListCtrl.SetItemText(i - index, 3, strResult[3]);
 		m_page3.m_ListCtrl.SetItemText(i - index, 4, strResult[4]);
 		m_page3.m_ListCtrl.SetItemText(i - index, 5, strResult[5]);
+	
 
 		CGdiRotBox* p1 = new CGdiRotBox(
 			data->center.x,
@@ -362,9 +373,6 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 	//水平排序和垂直排序 后面添加代码 
 	//
 	//
-
-	
-
 	m_GdiView.Redraw();
 }
 
