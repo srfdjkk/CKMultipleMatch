@@ -107,4 +107,5 @@ public:
 	void BeginTime();
 	void EndTime();
 
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 };

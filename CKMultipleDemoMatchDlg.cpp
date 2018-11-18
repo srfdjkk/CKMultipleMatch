@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CKMultipleDemoMatchDlg, CDialogEx)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, &CKMultipleDemoMatchDlg::OnTcnSelchangeTab1)
 	ON_BN_CLICKED(IDC_BTN_SEATCH, &CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel)
 
+	ON_WM_MOUSEMOVE()
 END_MESSAGE_MAP()
 
 BOOL CKMultipleDemoMatchDlg::OnInitDialog()
@@ -154,6 +155,10 @@ BOOL CKMultipleDemoMatchDlg::OnInitDialog()
 	m_sRotBoxROI.angle = 60;
 	m_sRotBoxROI.SetPenColor(RGB(255, 0, 0));
 	m_sRotBoxROI.SetVisible(false);
+
+	CString strImgInfo;
+	strImgInfo.Format(_T("%d*%d,bit=%d"), m_Image.GetHeight(), m_Image.GetWidth(), m_Image.GetBits());
+	GetDlgItem(IDC_EDIT_IMGINFO)->SetWindowText(strImgInfo);
 
 
 	//初始化page2部分
@@ -343,7 +348,7 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 
 	Overlay_DeleteAll(m_Results);
 
-	//BeginTime();
+	BeginTime();
 
 	if (m_sRectROI.GetVisible())
 	{
@@ -354,7 +359,7 @@ void CKMultipleDemoMatchDlg::OnBnClickedBTNSeatchModel()
 		m_Match.Execute(m_Image, m_Models, MaxROI);
 	}
 
-	//EndTime();
+	EndTime();
 	SMatchData* data;
 	int index = 0;
 	for (int i = 0; i < m_Match.GetNumMatchs(); i++)
@@ -466,6 +471,27 @@ void CKMultipleDemoMatchDlg::EndTime()
 	double fTime = double(m_EndTime.LowPart - m_BeginTime.LowPart) / double(m_Frequency.LowPart);
 	CString strTime;
 	strTime.Format(_T("消耗时间：%0.3f ms"), fTime*1000.0);
-	//SetDlgItemText(IDC_TIMER, strTime);
+	SetDlgItemText(IDC_EDIT1_TIME, strTime);
 }
 
+
+
+void CKMultipleDemoMatchDlg::OnMouseMove(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	ClientToScreen(&point);
+	CRect rect;//定义一个矩形框，包含左上角和右下角可访问成员
+	GetDlgItem(IDC_PIC_RECT)->GetClientRect(rect);//获取Picture控件的位置信息，存入rect中
+	GetDlgItem(IDC_PIC_RECT)->ClientToScreen(rect);//转换成屏幕坐标
+	if (rect.PtInRect(point))
+	{
+		CString str;
+		str.Format(_T("X=%d,Y=%d]   "), point.x, point.y);
+		GetDlgItem(IDC_EDIT1_MOUSE)->SetWindowText(str);
+		CDialogEx::OnMouseMove(nFlags, point);
+	}
+
+
+	
+
+}
