@@ -3,6 +3,7 @@
 #include "ToolControl.h"
 #include "CKMultipleDemoMatch_Tool.h"
 #include "CKMultipleDemoMatchDlg.h"
+//#include ""
 
 fHIDBCreatesLink		HIDBCreatesLink;
 fHIDBDeleteLink			HIDBDeleteLink;
@@ -284,6 +285,7 @@ int DeleteTool(TCHAR* pDocName, int nNodeID, TCHAR* pNodeName, void* pToolParam)
 void WriteString(CArchive &ar, CString str)
 {
 	ar.WriteString(str + _T("\r\n"));
+	
 }
 
 void WriteDouble(CArchive & ar, double dbNum)

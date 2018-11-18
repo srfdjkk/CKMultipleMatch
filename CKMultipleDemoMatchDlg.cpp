@@ -27,7 +27,8 @@ CKMultipleDemoMatchDlg::CKMultipleDemoMatchDlg(CWnd* pParent /*=NULL*/)
 
 CKMultipleDemoMatchDlg::~CKMultipleDemoMatchDlg()
 {
-
+	
+	m_GetMatchParam.cprImage.Release();
 }
 
 void CKMultipleDemoMatchDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,7 +64,7 @@ BOOL CKMultipleDemoMatchDlg::OnInitDialog()
 	m_Tab.InsertItem(2,_T("数据结果"));
 	m_Tab.InsertItem(3,_T("显示图形"));
 
-	//m_page1.Create(IDD_PAGE1, m_Tab.m_hWnd);
+
 	m_page1.Create(IDD_PAGE1,GetDlgItem(IDC_TAB1));
 	m_page2.Create(IDD_PAGE2,GetDlgItem(IDC_TAB1));
 	m_page3.Create(IDD_PAGE3,GetDlgItem(IDC_TAB1));
@@ -93,8 +94,21 @@ BOOL CKMultipleDemoMatchDlg::OnInitDialog()
 	//设置默认的选项卡 
 	m_Tab.SetCurSel(0);
 
+	//初始化模板和模板列表
+	m_Models = m_GetMatchParam.m_Models;
+	int index = 0;
+	for(int i=0;i<10;i++)
+	{
+		if (m_GetMatchParam.strModel[i] != _T(""))
+			index++;
+	}
+	for (int j=0;j<index;j++)
+	{
+		m_page2.m_ListBox1.AddString(m_GetMatchParam.strModel[j]);
+	}
+
+
 	//初始化Page1下拉列表
-	
 	m_page1.m_combox_image.AddString(m_GetMatchParam.str_ImageName);
 	m_page1.m_combox_image.SetCurSel(0);
 	//初始化图片控件；
@@ -102,9 +116,12 @@ BOOL CKMultipleDemoMatchDlg::OnInitDialog()
 	GetDlgItem(IDC_PIC_RECT)->GetWindowRect(&rect);
 	ScreenToClient(&rect);
 
+	m_Overlay = m_GetMatchParam.m_Overlay;
+	m_Results = m_GetMatchParam.m_Results;
+
 	m_GdiView.Create(m_hWnd, rect);
 	m_GdiView.SetBackColor(RGB(0, 0, 64));
-	m_Image.Copy(m_GetMatchParam.CPrImage);
+	m_Image.Copy(m_GetMatchParam.cprImage);
 	m_GdiView.SetDisplayImage(&m_Image);
 	m_GdiView.SetActiveOverlay(&m_Overlay);
 	m_GdiView.SetStaticOverlay(&m_Results);
@@ -172,11 +189,29 @@ BOOL CKMultipleDemoMatchDlg::OnInitDialog()
 	m_page3.m_ListCtrl.InsertColumn(4, _T("角度"),LVCFMT_CENTER, ListRect.Width()/6,4);
 	m_page3.m_ListCtrl.InsertColumn(5, _T("比例"), LVCFMT_CENTER, ListRect.Width()/6,5);
 
+	//add Init
+	int count = 0;
+	for (int i=0;i<20;i++)
+	{
+		if (m_GetMatchParam.strResult[i][0] != _T(""))
+			count++;
+	}
+	for (int j=0;j< count;j++)
+	{
+		m_page3.m_ListCtrl.InsertItem(j, m_GetMatchParam.strResult[j][0]);
+		m_page3.m_ListCtrl.SetItemText(j, 1, m_GetMatchParam.strResult[j][1]);
+		m_page3.m_ListCtrl.SetItemText(j, 2, m_GetMatchParam.strResult[j][2]);
+		m_page3.m_ListCtrl.SetItemText(j, 3, m_GetMatchParam.strResult[j][3]);
+		m_page3.m_ListCtrl.SetItemText(j, 4, m_GetMatchParam.strResult[j][4]);
+		m_page3.m_ListCtrl.SetItemText(j, 5, m_GetMatchParam.strResult[j][5]);
+	}
+	//m_page3.m_ListCtrl
+
+
+
 	m_GdiView.SetActiveOverlay(&m_Overlay);
 	m_GdiView.SetStaticOverlay(&m_Results);
-
-
-
+	m_GdiView.Redraw();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -196,7 +231,7 @@ void CKMultipleDemoMatchDlg::OnBnClickedCancelButton()
 
 void CKMultipleDemoMatchDlg::OnBnClickedOKButton()
 {
-	//HIDBSelectLink(cDocName, &iNodeID, cNodeName, cParamName, &iType, &iIndex);
+	
 	//保存参数，便于流程中运行
 	UpdateData();
 	ModePara.iMaxCount = m_page2.m_MaxCount;
@@ -210,6 +245,31 @@ void CKMultipleDemoMatchDlg::OnBnClickedOKButton()
 	ModePara.iAccuracy = m_page2.m_iAccuracy;
 	ModePara.iPolarity = m_page2.m_iPolarity;
 	
+	m_GetMatchParam.m_Overlay = m_Overlay;     //保存覆盖层
+	m_GetMatchParam.m_Results = m_Results;     //保存结果层
+
+	
+	m_GetMatchParam.cprImage.Clear();
+	m_GetMatchParam.cprImage.Copy(m_Image);      //保存图片
+	m_GetMatchParam.m_Models = m_Models;		//保存模板
+	
+	int index = m_page2.m_ListBox1.GetCount();  //保存模板名字
+	for (int i=0;i<index;i++)
+	{
+		m_page2.m_ListBox1.GetText(i, m_GetMatchParam.strModel[i]);
+	}
+
+	int count = m_page3.m_ListCtrl.GetItemCount();
+	for (int i = 0; i < count; i++)
+	{
+		for (int j = 0; j < 6; j++)
+		{
+			/*m_page3.m_ListCtrl.GetItemText(i, j,m_GetMatchParam.strResult[i][j],6);*/
+			m_GetMatchParam.strResult[i][j] = m_page3.m_ListCtrl.GetItemText(i, j);
+		}
+		
+	}
+
 	CDialogEx::OnOK();
 }
 

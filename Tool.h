@@ -89,9 +89,14 @@ typedef struct tagOffsetParam
 
 typedef struct GetMatchParam
 {
-	CPrImage CPrImage;
+	CPrImage cprImage;
 	CString  str_ImageName;
-	CString	 strModel[10];
+	CShapeModelList	m_Models;
+	CString	 strModel[10];	  //模板名字
+	CString	 strResult[20][6];   //查找结果
+	COverlay m_Overlay;		 //覆盖层
+	COverlay m_Results;		 //结果层
+
 	int      iMaxCount;		//搜索数量
 	int		 iMinScore;		//最小分数1~100
 	int		 iMinAngle;		//最小角度-180~180
@@ -105,7 +110,7 @@ typedef struct GetMatchParam
 	GetMatchParam()
 	{
 		CString  str_ImageName = _T("<NULL>");
-		
+		cprImage.Clear();
 		iMaxCount = 1;
 		iMinScore = 80;
 		iMinAngle = 0;

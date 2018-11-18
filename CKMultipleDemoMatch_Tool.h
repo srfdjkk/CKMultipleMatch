@@ -32,7 +32,7 @@ public:
 	void WriteDouble(CArchive &ar, double dbVal);
 	void SetImageParamByCkImage(ImageParam* pImageParam, CPrImage* pho_Img);
 
-	CPrImage	m_Image;
+
 	stLinkParam m_stLinkParam;
 	GetMatchParam m_GetMatchParam;
 	CShapeMatch	*m_Match;
